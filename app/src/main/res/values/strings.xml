@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CoroutineDemoExample</string>
+    <string name="my_online_store">My Online Store</string>
+    <string name="rupee">₹</string>
+</resources>
