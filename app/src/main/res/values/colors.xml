@@ -7,4 +7,6 @@
     <color name="light_yellow">#F8EE92</color>
     <color name="light_grey">#EDE2E2</color>
     <color name="green">#4CAF50</color>
+    <color name="shimmer_light">#787373</color>
+    <color name="shimmer_dark">#545050</color>
 </resources>

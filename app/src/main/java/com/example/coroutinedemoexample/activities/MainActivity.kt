@@ -58,22 +58,65 @@ class MainActivity : AppCompatActivity() {
                 when (state) {
                     is ProductState.Loading -> {
                         //binding.progressBar.visibility = android.view.View.VISIBLE
+                        binding.shimmerLayout.visibility = View.VISIBLE
+                        binding.shimmerLayout.startShimmer()
+                        binding.rvProductList.visibility = View.GONE
                     }
 
                     is ProductState.Success -> {
                         //binding.progressBar.visibility = android.view.View.GONE
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        binding.shimmerLayout.visibility = View.GONE
+                        binding.shimmerLayout.stopShimmer()
                         adapter.submitList(state.items)
+                        binding.rvProductList.visibility = View.VISIBLE
                     }
 
                     is ProductState.Error -> {
-                        //binding.progressBar.visibility = android.view.View.GONE
-                        // show toast/snackbar
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        binding.shimmerLayout.visibility = View.GONE
+                        binding.shimmerLayout.stopShimmer()
+                        binding.rvProductList.visibility = View.GONE
                     }
                 }
             }
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.shimmerLayout.visibility = View.VISIBLE
+            binding.shimmerLayout.startShimmer()
+            binding.swipeRefreshLayout.isRefreshing = true
+            lifecycleScope.launch {
+                vm.state.collectLatest { state ->
+                    when (state) {
+                        is ProductState.Loading -> {
+                            //binding.progressBar.visibility = android.view.View.VISIBLE
+                            //binding.swipeRefreshLayout.isRefreshing = true
+                            binding.shimmerLayout.visibility = View.VISIBLE
+                            binding.shimmerLayout.startShimmer()
+                            binding.rvProductList.visibility = View.GONE
+                        }
 
+                        is ProductState.Success -> {
+                            //binding.progressBar.visibility = android.view.View.GONE
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            binding.shimmerLayout.visibility = View.GONE
+                            binding.shimmerLayout.stopShimmer()
+                            adapter.submitList(state.items)
+                            binding.rvProductList.visibility = View.VISIBLE
+                        }
+
+                        is ProductState.Error -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            binding.shimmerLayout.visibility = View.GONE
+                            binding.shimmerLayout.stopShimmer()
+                            binding.rvProductList.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+
+        }
         //getProductData()
     }
 
